@@ -31,18 +31,20 @@ import java.awt.event.*;
 import javax.swing.*;
 import net.sf.clipsrules.jni.*;
 import jade.core.behaviours.OneShotBehaviour;
+import jade.core.behaviours.*;
 
 /**
   @author Giovanni Caire - TILAB
  */
-class BookSellerGui extends JFrame {	
-	private BookSellerAgent myAgent;
+class VentanaAgente extends JFrame {	
+	Environment clips;
+	private AgenteConocimiento myAgent;
 	
 	private JTextField titleField, priceField;
 	
-	BookSellerGui(BookSellerAgent a) {
+	VentanaAgente(AgenteConocimiento a) {
 		super(a.getLocalName());
-		
+		clips=new Environment();
 		myAgent = a;
 		
 		JPanel p = new JPanel();
@@ -61,7 +63,9 @@ class BookSellerGui extends JFrame {
 				try {
 					String hechosT = titleField.getText().trim();
 					String reglasT = priceField.getText().trim();
-					myAgent.addBehaviour(new MyOneShotBehaviour(hechosT,reglasT));
+					//myAgent.addBehaviour(new MyOneShotBehaviour(hechosT,reglasT));
+					myAgent.addBehaviour(new Tell(hechosT,reglasT));
+					myAgent.addBehaviour(new Ask());
 					//OneShotAgent oneShotAgent=new OneShotAgent(myAgent,hechos,reglas);
 					
 					//Principal principal=new Principal();
@@ -72,7 +76,7 @@ class BookSellerGui extends JFrame {
 					priceField.setText("");
 				}
 				catch (Exception e) {
-					JOptionPane.showMessageDialog(BookSellerGui.this, "Invalid values. "+e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE); 
+					JOptionPane.showMessageDialog(VentanaAgente.this, "Invalid values. "+e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE); 
 				}
 			}
 		} );
@@ -100,6 +104,63 @@ class BookSellerGui extends JFrame {
 		super.setVisible(true);
 	}	
 	
+	private class Tell extends Behaviour{
+		private String hecho;
+		private String regla;
+		boolean tellBandera=false;
+		public Tell(String hechos,String reglas){
+			hecho=hechos;
+			regla=reglas;
+		}
+		public void action(){
+			clips=new Environment();
+            clips.eval("(clear)");
+            clips.eval("(reset)");
+		    clips.eval(hecho);
+			clips.build(regla);
+            clips.eval("(facts)");
+			tellBandera=true;
+		}
+		public boolean done(){
+			if(tellBandera){
+				return true;
+			}
+			else{
+				return false;
+			}
+		}
+	}
+
+	private class Ask extends Behaviour{
+		boolean askBandera = false;
+		public void action(){
+			System.out.println("se ejecuto ask");
+			System.out.println("estas son las reglas:");
+			clips.eval("(rules)");
+			System.out.println("estos son los resultados de reglas");
+			clips.run();
+			askBandera = true;
+		}
+		public boolean done(){
+			if(askBandera)
+			{
+				return true;
+			}
+			else{
+				return false;
+			}
+		}
+		/*
+		public int onEnd(){
+			myAgent.doDelete();   
+		    //return super.onEnd();
+			return 0;
+		}*/
+	}
+
+
+
+/*
 	private class MyOneShotBehaviour extends OneShotBehaviour {
 		private String hecho;
 		private String regla;
@@ -111,21 +172,20 @@ class BookSellerGui extends JFrame {
 			System.out.println("Agent's action method executed");
 		        System.out.println("hecho: "+hecho);
 		        System.out.println("regla: "+regla);
-		        Environment clips=new Environment();
-                        clips.eval("(clear)");
-                        clips.eval("(reset)");
+		        clips=new Environment();
+                clips.eval("(clear)");
+                clips.eval("(reset)");
 		        clips.eval(hecho);
-                        //System.out.println("mostrando hechos");
-			clips.build(regla);
-                        clips.eval("(rules)");
-                        clips.eval("(facts)");
-                        clips.run();
+			    clips.build(regla);
+                clips.eval("(rules)");
+                clips.eval("(facts)");
+                clips.run();
 			} 
-		    /*
+		    
 		    public int onEnd() {
 		      myAgent.doDelete();   
 		      return super.onEnd();
-		    }*/ 
-		} 
+		    }
+		} */
 	
 }
