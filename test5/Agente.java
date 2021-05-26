@@ -4,7 +4,7 @@ import jade.core.Agent;
 import jade.core.behaviours.OneShotBehaviour;
 import java.io.File;
 
-public class OneShotAgent extends Agent {
+public class Agente extends Agent {
 	private String[] lista1=new String[10];
 	private String[] lista2=new String[10];
 	private String[] lista3=new String[10];
