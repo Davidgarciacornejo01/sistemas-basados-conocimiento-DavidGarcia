@@ -60,7 +60,6 @@ public class CustomerAgentAlibaba extends Agent {
 					sd.setType("book-selling");
 					template.addServices(sd);
 					try {
-						//aqui se pasan los nombres de todos los agentes
 						DFAgentDescription[] result = DFService.search(myAgent, template); 
 						System.out.println("Found the following seller agents:");
 						sellerAgents = new AID[result.length];
@@ -83,7 +82,6 @@ public class CustomerAgentAlibaba extends Agent {
 			System.out.println("No target book title specified");
 			doDelete();
 		}
-		addBehaviour(new Mostrar());
 	}
 
 	// Put agent clean-up operations here
@@ -165,15 +163,37 @@ public class CustomerAgentAlibaba extends Agent {
 					// Purchase order reply received
 					if (reply.getPerformative() == ACLMessage.INFORM) {
 						// Purchase successful. We can terminate
-						AlibabaDB alibabaDB=new AlibabaDB();
-						String[] arrayElementos = alibabaDB.buscarProducto(targetBookTitle);
-						int numeroElementos=Integer.parseInt(arrayElementos[4])-1;
-						alibabaDB.updateProductos(numeroElementos, arrayElementos[0], arrayElementos[2]);
 						System.out.println(targetBookTitle+" successfully purchased from agent "+reply.getSender().getName());
-						//System.out.println("Price = "+bestPrice);
-						System.out.println("se a vendido: "+targetBookTitle);
+						System.out.println("Price = "+bestPrice);
+						String direccion=reply.getSender().getName().toString();
+						int respuestaAlibaba=direccion.indexOf("alibaba");
+						if(respuestaAlibaba!=-1)
+						{
+							AlibabaDB alibabaDB = new AlibabaDB();
+							String[] array = alibabaDB.buscarProducto(targetBookTitle);
+							int numeroElementos = Integer.parseInt(array[4])-1;
+							alibabaDB.updateProductos(numeroElementos, array[0], array[2]);
+							System.out.println("se compro un producto "+array[2]+": "+targetBookTitle+" en alibaba");
+					    }
+						int respuestaAmazon=direccion.indexOf("amazon");
+						if(respuestaAmazon!=-1)
+						{
+							AmazonDB amazonDB = new AmazonDB();
+							String[] array = amazonDB.buscarProducto(targetBookTitle);
+							int numeroElementos=Integer.parseInt(array[4])-1;
+							amazonDB.updateProductos(numeroElementos, array[0], array[2]);
+							System.out.println("se compro un producto "+array[2]+" "+targetBookTitle+" en amazon");
+					    }
+						int respuestaBarnes=direccion.indexOf("barnes");
+						if(respuestaBarnes!=-1)
+						{
+							BarnesNobleDB barnesNobleDB = new BarnesNobleDB();
+							String[] array = barnesNobleDB.buscarProducto(targetBookTitle);
+							int numeroElementos = Integer.parseInt(array[4])-1;
+							barnesNobleDB.updateProductos(numeroElementos, array[0], array[2]);
+							System.out.println("se compro un producto "+array[2]+" "+targetBookTitle+" en barnes noble");
+					    }
 						myAgent.doDelete();
-						alibabaDB.mostrarLista();
 					}
 					else {
 						System.out.println("Attempt failed: requested book already sold.");
@@ -195,14 +215,5 @@ public class CustomerAgentAlibaba extends Agent {
 			return ((step == 2 && bestSeller == null) || step == 4);
 		}
 	}  // End of inner class RequestPerformer
-	class Mostrar extends OneShotBehaviour{
-
-		@Override
-		public void action() {
-			// TODO Auto-generated method stub
-			BarnesNobleDB barnesNobleDB=new BarnesNobleDB();
-			barnesNobleDB.mostrarLista();
-		}
-
-	}
 }
+

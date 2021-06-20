@@ -74,6 +74,9 @@ public class BarnesNobleAgent extends Agent {
 		addBehaviour(new CargaDatos());
 	}
 
+	public void cargar(){
+		addBehaviour(new CargaDatos());
+	}
 	// Put agent clean-up operations here
 	protected void takeDown() {
 		// Deregister from the yellow pages
@@ -102,16 +105,26 @@ public class BarnesNobleAgent extends Agent {
 				BarnesNobleDB barnesNobleDb=new BarnesNobleDB();
 				barnesNobleDb.setProductos(nombre, tipo, precio, elementosDisponibles);
 				System.out.println("insertado en la base de datos");
-				addBehaviour(new TellComputadora(tipo, precio));
-				addBehaviour(new AskComputadora());
-				addBehaviour(new TellCelular(tipo, precio));
-				addBehaviour(new AskCelular());
-				addBehaviour(new TellSaco(tipo, precio));
-				addBehaviour(new AskSaco());
-				addBehaviour(new TellZapatos(tipo, precio));
-				addBehaviour(new AskZapatos());
-				addBehaviour(new TellPantalla(tipo, precio));
-				addBehaviour(new AskPantalla());
+				if(tipo.equals("computadora")){
+					addBehaviour(new TellComputadora(tipo, precio));
+				    addBehaviour(new AskComputadora());
+				}
+				if(tipo.equals("celular")){
+					addBehaviour(new TellCelular(tipo, precio));
+				    addBehaviour(new AskCelular());
+				}
+				if(tipo.equals("saco")){
+					addBehaviour(new TellSaco(tipo, precio));
+				    addBehaviour(new AskSaco());
+				}
+				if(tipo.equals("zapatos")){
+					addBehaviour(new TellZapatos(tipo, precio));
+				    addBehaviour(new AskZapatos());
+				}
+				if(tipo.equals("zapatos")){
+					addBehaviour(new TellPantalla(tipo, precio));
+				    addBehaviour(new AskPantalla());
+				}
 			}
 		} );
 	}

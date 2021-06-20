@@ -88,6 +88,20 @@ class BookSellerGui extends JFrame {
 		} );
 		p = new JPanel();
 		p.add(addButton);
+
+
+		JButton cargarButton = new JButton("Cargar datos");
+		cargarButton.addActionListener( new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+				try {
+					alibabaAgent.cargar();
+				}
+				catch (Exception e) {
+					JOptionPane.showMessageDialog(BookSellerGui.this, "Invalid values. "+e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE); 
+				}
+			}
+		} );
+		p.add(cargarButton);
 		getContentPane().add(p, BorderLayout.SOUTH);
 		
 		// Make the agent terminate when the user closes 
@@ -149,6 +163,20 @@ class BookSellerGui extends JFrame {
 		} );
 		p = new JPanel();
 		p.add(addButton);
+
+
+		JButton cargarButton = new JButton("Cargar datos");
+		cargarButton.addActionListener( new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+				try {
+					amazonAgent.cargar();
+				}
+				catch (Exception e) {
+					JOptionPane.showMessageDialog(BookSellerGui.this, "Invalid values. "+e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE); 
+				}
+			}
+		} );
+		p.add(cargarButton);
 		getContentPane().add(p, BorderLayout.SOUTH);
 		
 		// Make the agent terminate when the user closes 
@@ -210,6 +238,20 @@ class BookSellerGui extends JFrame {
 		} );
 		p = new JPanel();
 		p.add(addButton);
+
+
+		JButton cargarButton = new JButton("Cargar datos");
+		cargarButton.addActionListener( new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+				try {
+					barnesNobleAgent.cargar();
+				}
+				catch (Exception e) {
+					JOptionPane.showMessageDialog(BookSellerGui.this, "Invalid values. "+e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE); 
+				}
+			}
+		} );
+		p.add(cargarButton);
 		getContentPane().add(p, BorderLayout.SOUTH);
 		
 		// Make the agent terminate when the user closes 
